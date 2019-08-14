@@ -34,4 +34,9 @@ public class StateServiceImpl implements StateService {
 		return findAll().parallelStream().map(entity -> mapper.map(entity, StateDTO.class)).collect(Collectors.toList());
 	}
 
+	@Override
+	public State findByUf(String uf) {
+		return repository.findByUf(uf);
+	}
+
 }

@@ -1,5 +1,12 @@
 package com.br.senior.repository.state;
 
-public class StateRepositoryImpl implements StateCustomRepository {
+import javax.persistence.EntityManager;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class StateRepositoryImpl implements StateCustomRepository {
+	
+	@Autowired
+	private EntityManager em;
+	
 }

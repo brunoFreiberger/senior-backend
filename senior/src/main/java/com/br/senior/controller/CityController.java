@@ -85,12 +85,13 @@ public class CityController implements ErrorController {
 	}
 
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
-    public void uploadMultipart(@RequestParam("file") MultipartFile file) {
+    public @ResponseBody HttpStatus uploadMultipart(@RequestParam("file") MultipartFile file) {
         try {
 			service.persistCsv(file.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+        return HttpStatus.OK;
     }
     
 	@GetMapping(path = "/find/{id}")

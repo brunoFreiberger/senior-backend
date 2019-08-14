@@ -2,13 +2,12 @@ package com.br.senior.service.city;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,7 +22,6 @@ import com.br.senior.model.State;
 import com.br.senior.repository.city.CityRepository;
 import com.br.senior.service.state.StateService;
 import com.br.senior.utils.CsvUtils;
-import com.br.senior.utils.ObjectMapperUtils;
 
 @Service
 public class CityServiceImpl implements CityService {
@@ -39,9 +37,11 @@ public class CityServiceImpl implements CityService {
 	@Override
 	public Page<CityDTO> findByFilters(PageRequest pageRequest, CityFilterDTO filter) {
 		mapper = new ModelMapper();
-		Page<City> entities = cityRepository.findByFilters(pageRequest, filter);
-		Collection<CityDTO> dtos = ObjectMapperUtils.mapAll(entities.getContent(), CityDTO.class);
-		return new PageImpl<CityDTO>(dtos.stream().collect(Collectors.toList()), entities.getPageable(), entities.getTotalElements());
+		mapper.getConfiguration()
+		  .setMatchingStrategy(MatchingStrategies.LOOSE);
+		Page<City> page = cityRepository.findByFilters(pageRequest, filter);
+		List<CityDTO> dtos = page.getContent().parallelStream().map(entity -> mapper.map(entity, CityDTO.class)).collect(Collectors.toList());
+		return new PageImpl<CityDTO>(dtos, page.getPageable(), page.getTotalElements());
 	}
 
 	@Override
@@ -80,6 +80,8 @@ public class CityServiceImpl implements CityService {
 	public CityDTO save(CityDTO obj) {
 		mapper = new ModelMapper();
 		City entity = mapper.map(obj, City.class);
+		State state = stateService.findByUf(obj.getStateUf());
+		entity.setState(state);
 		entity = cityRepository.save(entity);
 		obj = mapper.map(entity, CityDTO.class);
 		return obj;

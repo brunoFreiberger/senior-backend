@@ -8,8 +8,11 @@ import com.br.senior.model.State;
 public interface StateService {
 	
 	public List<State> findAll();
+	
 	public List<StateDTO> findAllDTO();
 	
 	public State save(State state);
+	
+	public State findByUf(String uf);
 
 }

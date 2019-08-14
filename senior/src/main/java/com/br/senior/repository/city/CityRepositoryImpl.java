@@ -22,7 +22,7 @@ public class CityRepositoryImpl implements CityCustomRepository {
 		BooleanBuilder predicate = new BooleanBuilder();
 
 		if (!CommonUtils.isNull(filter.getIbgeId())) {
-			predicate.and(city.ibgeId.eq(filter.getIbgeId()));
+			predicate.and(city.ibgeId.contains(filter.getIbgeId()));
 		}
 
 		if (!CommonUtils.isNull(filter.getStateId())) {
