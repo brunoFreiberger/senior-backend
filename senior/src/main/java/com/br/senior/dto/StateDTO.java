@@ -1,26 +1,19 @@
 package com.br.senior.dto;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class StateDTO {
 
 	private Long id;
 	private String name;
 	private String uf;
-	private CityDTO capital;
-	private Set<CityDTO> cities = new HashSet<>();
 
 	public StateDTO() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public StateDTO(Long id, String name, String uf, CityDTO capital, Set<CityDTO> cities) {
+	public StateDTO(Long id, String name, String uf) {
 		this.id = id;
 		this.name = name;
 		this.uf = uf;
-		this.capital = capital;
-		this.cities = cities;
 	}
 
 	public Long getId() {
@@ -45,22 +38,6 @@ public class StateDTO {
 
 	public void setUf(String uf) {
 		this.uf = uf;
-	}
-
-	public CityDTO getCapital() {
-		return capital;
-	}
-
-	public void setCapital(CityDTO capital) {
-		this.capital = capital;
-	}
-
-	public Set<CityDTO> getCities() {
-		return cities;
-	}
-
-	public void setCities(Set<CityDTO> cities) {
-		this.cities = cities;
 	}
 
 	@Override

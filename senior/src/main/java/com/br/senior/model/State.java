@@ -1,7 +1,7 @@
 package com.br.senior.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,9 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -41,12 +39,16 @@ public class State {
 	@Column(name = "uf")
 	private String uf;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@MapsId
-	private City capital;
-
 	@OneToMany(mappedBy = "state", fetch = FetchType.LAZY)
-	private Set<City> cities = new HashSet<City>();
+	private List<City> cities = new ArrayList<>();
+
+	public State() {
+	}
+
+	public State(String name, String uf) {
+		this.name = name;
+		this.uf = uf;
+	}
 
 	public Long getId() {
 		return id;
@@ -72,19 +74,11 @@ public class State {
 		this.uf = uf;
 	}
 
-	public City getCapital() {
-		return capital;
-	}
-
-	public void setCapital(City capital) {
-		this.capital = capital;
-	}
-
-	public Set<City> getCities() {
+	public List<City> getCities() {
 		return cities;
 	}
 
-	public void setCities(Set<City> cities) {
+	public void setCities(List<City> cities) {
 		this.cities = cities;
 	}
 

@@ -6,25 +6,35 @@ package com.br.senior.dto;
  *
  */
 public class CityDTO {
-	
+
 	private Long id;
+	private String ibgeId;
 	private String name;
 	private String lon;
 	private String lat;
 	private String alternativeName;
-	private StateDTO state;
-	
+	private String stateUf;
+	private boolean capital;
+	private String noAccents;
+	private String microregion;
+	private String mesoregion;
+
 	public CityDTO() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CityDTO(Long id, String name, String lon, String lat, String alternativeName, StateDTO state) {
-		this.id = id;
+	public CityDTO(String ibgeId, String name, String lon, String lat, String alternativeName, String stateUf,
+			boolean capital, String noAccents, String microregion, String mesoregion) {
+		this.ibgeId = ibgeId;
 		this.name = name;
 		this.lon = lon;
 		this.lat = lat;
 		this.alternativeName = alternativeName;
-		this.state = state;
+		this.stateUf = stateUf;
+		this.capital = capital;
+		this.noAccents = noAccents;
+		this.microregion = microregion;
+		this.mesoregion = mesoregion;
 	}
 
 	public Long getId() {
@@ -67,12 +77,56 @@ public class CityDTO {
 		this.alternativeName = alternativeName;
 	}
 
-	public StateDTO getState() {
-		return state;
+	public String getStateUf() {
+		return stateUf;
 	}
 
-	public void setState(StateDTO state) {
-		this.state = state;
+	public void setStateUf(String stateUf) {
+		this.stateUf = stateUf;
+	}
+
+	public void setCapital(boolean capital) {
+		this.capital = capital;
+	}
+
+	public Boolean getCapital() {
+		return capital;
+	}
+
+	public void setCapital(Boolean capital) {
+		this.capital = capital;
+	}
+	
+	public String getIbgeId() {
+		return ibgeId;
+	}
+
+	public void setIbgeId(String ibgeId) {
+		this.ibgeId = ibgeId;
+	}
+	
+	public String getNoAccents() {
+		return noAccents;
+	}
+
+	public void setNoAccents(String noAccents) {
+		this.noAccents = noAccents;
+	}
+	
+	public String getMicroregion() {
+		return microregion;
+	}
+
+	public void setMicroregion(String microregion) {
+		this.microregion = microregion;
+	}
+
+	public String getMesoregion() {
+		return mesoregion;
+	}
+
+	public void setMesoregion(String mesoregion) {
+		this.mesoregion = mesoregion;
 	}
 
 	@Override

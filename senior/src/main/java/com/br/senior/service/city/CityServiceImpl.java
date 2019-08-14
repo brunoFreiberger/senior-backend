@@ -1,8 +1,11 @@
 package com.br.senior.service.city;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -12,23 +15,31 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.br.senior.dto.CityCsvDTO;
 import com.br.senior.dto.CityDTO;
+import com.br.senior.dto.CityFilterDTO;
 import com.br.senior.model.City;
+import com.br.senior.model.State;
 import com.br.senior.repository.city.CityRepository;
+import com.br.senior.service.state.StateService;
+import com.br.senior.utils.CsvUtils;
 import com.br.senior.utils.ObjectMapperUtils;
 
 @Service
 public class CityServiceImpl implements CityService {
 	
 	@Autowired
-	private CityRepository repository;
+	private CityRepository cityRepository;
+	
+	@Autowired
+	private StateService stateService;
 
 	private ModelMapper mapper;
 
 	@Override
-	public Page<CityDTO> findByFilters(PageRequest pageRequest, Map<String, String> filters) {
+	public Page<CityDTO> findByFilters(PageRequest pageRequest, CityFilterDTO filter) {
 		mapper = new ModelMapper();
-		Page<City> entities = repository.findByFilters(pageRequest, filters);
+		Page<City> entities = cityRepository.findByFilters(pageRequest, filter);
 		Collection<CityDTO> dtos = ObjectMapperUtils.mapAll(entities.getContent(), CityDTO.class);
 		return new PageImpl<CityDTO>(dtos.stream().collect(Collectors.toList()), entities.getPageable(), entities.getTotalElements());
 	}
@@ -36,25 +47,25 @@ public class CityServiceImpl implements CityService {
 	@Override
 	public CityDTO findById(Long id) {
 		mapper = new ModelMapper();
-		City entity = repository.findById(id).orElse(null);
+		City entity = cityRepository.findById(id).orElse(null);
 		return mapper.map(entity, CityDTO.class);
 	}
 
 	@Override
 	public Iterable<CityDTO> findAll() {
 		mapper = new ModelMapper();
-		List<City> data = repository.findAll();
+		List<City> data = cityRepository.findAll();
 		return data.parallelStream().map(entity -> mapper.map(entity, CityDTO.class)).collect(Collectors.toList());
 	}
 
 	@Override
 	public Long count() {
-		return repository.count();
+		return cityRepository.count();
 	}
 
 	@Override
 	public void deleteById(Long id) {
-		repository.deleteById(id);
+		cityRepository.deleteById(id);
 	}
 
 	@Override
@@ -62,16 +73,36 @@ public class CityServiceImpl implements CityService {
 		mapper = new ModelMapper();
 		List<City> entities = batch.parallelStream().map(dto -> mapper.map(dto, City.class))
 				.collect(Collectors.toList());
-		repository.deleteAll(entities);
+		cityRepository.deleteAll(entities);
 	}
 
 	@Override
 	public CityDTO save(CityDTO obj) {
 		mapper = new ModelMapper();
 		City entity = mapper.map(obj, City.class);
-		entity = repository.save(entity);
+		entity = cityRepository.save(entity);
 		obj = mapper.map(entity, CityDTO.class);
 		return obj;
 	}
+
+	@Override
+	public void saveAll(List<CityDTO> cities) {
+		
+	}
+
+	@Override
+	public void persistCsv(InputStream inputStream) {
+		try {
+			List<State> loadedStates = stateService.findAll();
+			List<CityCsvDTO> csvDtos = CsvUtils.read(CityCsvDTO.class, inputStream);
+			csvDtos.parallelStream().forEach(csvDto -> {
+				Optional<State> stateOpt = loadedStates.parallelStream().filter(s -> s.getUf().equals(csvDto.getUf())).findFirst();
+				stateOpt.ifPresent(state -> cityRepository.save(new City(csvDto.getName(), csvDto.getLon(), csvDto.getLat(), csvDto.getAlternative_names(), state, csvDto.getCapital(), csvDto.getMicroregion(), csvDto.getMesoregion(), csvDto.getIbge_id(), csvDto.getNo_accents())));
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 }

@@ -1,6 +1,5 @@
 package com.br.senior.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -43,8 +42,41 @@ public class City {
 	@Column(name = "alternativeName")
 	private String alternativeName;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private State state;
+
+	@Column(name = "capital")
+	private boolean capital;
+
+	@Column(name = "microregion")
+	private String microregion;
+
+	@Column(name = "mesoregion")
+	private String mesoregion;
+
+	@Column(name = "ibge_id")
+	private String ibgeId;
+
+	@Column(name = "no_accents")
+	private String noAccents;
+
+	public City() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public City(String name, String lon, String lat, String alternativeName, State state, boolean capital,
+			String microregion, String mesoregion, String ibgeId, String noAccents) {
+		this.name = name;
+		this.lon = lon;
+		this.lat = lat;
+		this.alternativeName = alternativeName;
+		this.state = state;
+		this.capital = capital;
+		this.microregion = microregion;
+		this.mesoregion = mesoregion;
+		this.ibgeId = ibgeId;
+		this.noAccents = noAccents;
+	}
 
 	public Long getId() {
 		return id;
@@ -92,6 +124,46 @@ public class City {
 
 	public void setState(State state) {
 		this.state = state;
+	}
+
+	public boolean isCapital() {
+		return capital;
+	}
+
+	public void setCapital(boolean capital) {
+		this.capital = capital;
+	}
+
+	public String getMicroregion() {
+		return microregion;
+	}
+
+	public void setMicroregion(String microregion) {
+		this.microregion = microregion;
+	}
+
+	public String getMesoregion() {
+		return mesoregion;
+	}
+
+	public void setMesoregion(String mesoregion) {
+		this.mesoregion = mesoregion;
+	}
+
+	public String getIbgeId() {
+		return ibgeId;
+	}
+
+	public void setIbgeId(String ibgeId) {
+		this.ibgeId = ibgeId;
+	}
+
+	public String getNoAccents() {
+		return noAccents;
+	}
+
+	public void setNoAccents(String noAccents) {
+		this.noAccents = noAccents;
 	}
 
 	@Override
